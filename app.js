@@ -1,7 +1,21 @@
-const geocode = require('./api/mapbox').geocode;
+const { geocode } = require('./api/mapbox');
+const { forecast } = require('./api/darksky');
 
-geocode('Dallas, TX', (error, data) => {
-    console.log('Error: ', error);
-    console.log('Data: ', data);
-    console.log(data.location);
+const location = process.argv[2];
+geocode(location, (error, geocodeData) => {
+    if (error) {
+        return console.log(error);
+    }
+    
+    const { latitude, longitude } = geocodeData;
+
+    forecast({ latitude, longitude }, (error, forecastData) => {
+        if (error) {
+            return console.log(error);
+        }
+
+        console.log(geocodeData.location);
+        console.log(forecastData);        
+    });
+    
 });
