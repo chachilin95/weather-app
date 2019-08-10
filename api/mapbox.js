@@ -13,18 +13,19 @@ const geocode = (place, callback) => {
     request({ url, json: true }, (error, response) => {
 
         if (error) {
-            callback('Unable to connect to location services.', undefined);
+            return callback('Unable to connect to location services.', undefined);
         } else if (response.body.features.length === 0) {
-            callback('Unable to find location, try another search term', undefined);
-        } else {
-            const location = response.body.features[0].place_name
-            const [longitude, latitude] = response.body.features[0].center;
-            callback(undefined, {
-                longitude,
-                latitude,
-                location
-            });
+            return callback('Unable to find location, try another search term', undefined);
         }
+        
+        const location = response.body.features[0].place_name
+        const [longitude, latitude] = response.body.features[0].center;
+        callback(undefined, {
+            longitude,
+            latitude,
+            location
+        });
+        
     });
 };
 
