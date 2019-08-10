@@ -10,16 +10,16 @@ const generateURL = (place) => (
 const geocode = (place, callback) => {
     const url = generateURL(place);
 
-    request({ url, json: true }, (error, response) => {
+    request({ url, json: true }, (error, { body }) => {
 
         if (error) {
             return callback('Unable to connect to location services.', undefined);
-        } else if (response.body.features.length === 0) {
+        } else if (body.features.length === 0) {
             return callback('Unable to find location, try another search term', undefined);
         }
-        
-        const location = response.body.features[0].place_name
-        const [longitude, latitude] = response.body.features[0].center;
+
+        const location = body.features[0].place_name
+        const [longitude, latitude] = body.features[0].center;
         callback(undefined, {
             longitude,
             latitude,
