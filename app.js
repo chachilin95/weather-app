@@ -1,10 +1,11 @@
-const fs = require('fs');
 const request = require('request');
+const DarkSky = require('./api/darksky');
+const MapBox = require('./api/mapbox');
 
-const DarkSkyKey = fs.readFileSync('./darksky.secret.key').toString();
-const url = `https://api.darksky.net/forecast/${DarkSkyKey}/37.8267,-122.4233`; // example url
+const mbURL = MapBox.generateURL();
+const dsURL = DarkSky.generateURL();
 
-request({ url, json: true }, (error, response) => {
+request({ url: dsURL, json: true }, (error, response) => {
 
     if (error) {
         console.log(error);
@@ -20,4 +21,11 @@ request({ url, json: true }, (error, response) => {
         todaySummary,
         `It is currently ${temperature} degrees out. There is a ${precipitation}% chance of rain`
     );
+});
+
+request({ url: mbURL, json: true }, (err, response) => {
+    const { features } = response.body;
+    const [ longitude, latitude ] = features[0].center;
+
+    console.log(latitude, longitude);
 });
